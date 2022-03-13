@@ -42,7 +42,7 @@ def _parse_to_json(filename: str) -> List[dict]:
                 'end': component.get('dtend').dt,
                 'organizer': _cleanse_emails(component.get('organizer')),
                 'attendees': [_cleanse_emails(attendee) for attendee in component.get('attendee')]
-                if component.get('attendee') else [],
+                if component.get('attendee') else None,
             }
             events.append(event)
     g.close()

@@ -3,7 +3,7 @@ import json
 
 import dash
 from dash.dependencies import Input, Output, State
-from dash import dcc
+from dash import dcc, dash_table
 import dash_bootstrap_components as dbc
 import dash_daq as daq
 from dash import html
@@ -21,6 +21,7 @@ def setup(app: dash.Dash):
 def _setup_structure():
     Path(settings.CALENDARS_DIR).mkdir(parents=True, exist_ok=True)
     Path(settings.JSON_DIR).mkdir(parents=True, exist_ok=True)
+    Path(settings.IMG_DIR).mkdir(parents=True, exist_ok=True)
     parser.iterate_through_calendars(settings.CALENDARS_DIR, settings.JSON_DIR)
 
 
@@ -50,9 +51,10 @@ def _setup_layout(app: dash.Dash):
                                 max_date_allowed=df['end'].max(),
                                 initial_visible_month=df['start'].min(),
                                 display_format='Y-MM-DD',
-                                start_date=df['start'].min(),
-                                end_date=datetime.date.today()
+                                start_date=pd.to_datetime(df['start'].min()),
+                                end_date=datetime.datetime.now()
                             ),
+                            html.Button('Apply', id='btn-submit', n_clicks=0),
                         ]),
                 ]
             ),
@@ -86,6 +88,13 @@ def _setup_layout(app: dash.Dash):
                         backgroundColor='#1e2130',
                         size=50,
                     ),
+                    daq.LEDDisplay(
+                        id='avg-meetings',
+                        value=len(df),
+                        color='#92e0d3',
+                        backgroundColor='#1e2130',
+                        size=50,
+                    ),
                 ]
             ),
             html.Div(
@@ -94,6 +103,13 @@ def _setup_layout(app: dash.Dash):
                     html.H2('Persoanl Events'),
                     daq.LEDDisplay(
                         id='total-personal',
+                        value=len(df),
+                        color='#92e0d3',
+                        backgroundColor='#1e2130',
+                        size=50,
+                    ),
+                    daq.LEDDisplay(
+                        id='avg-personal',
                         value=len(df),
                         color='#92e0d3',
                         backgroundColor='#1e2130',
@@ -108,12 +124,8 @@ def _setup_layout(app: dash.Dash):
                 className='col-md-8',
                 children=[
                     html.H2('Distribution'),
-                    daq.LEDDisplay(
-                        id='distribution',
-                        value=len(df),
-                        color='#92e0d3',
-                        backgroundColor='#1e2130',
-                        size=50,
+                    dcc.Graph(
+                        id="distribution",
                     ),
                 ]
             ),
@@ -124,12 +136,8 @@ def _setup_layout(app: dash.Dash):
                 className='col-md-4',
                 children=[
                     html.H2('Attendees'),
-                    daq.LEDDisplay(
-                        id='attendees',
-                        value=len(df),
-                        color='#92e0d3',
-                        backgroundColor='#1e2130',
-                        size=50,
+                    dash_table.DataTable(
+                        id='attendees-table',
                     ),
                 ]
             ),
@@ -137,13 +145,7 @@ def _setup_layout(app: dash.Dash):
                 className='col-md-4',
                 children=[
                     html.H2('Event Analysis'),
-                    daq.LEDDisplay(
-                        id='event-analysis',
-                        value=len(df),
-                        color='#92e0d3',
-                        backgroundColor='#1e2130',
-                        size=50,
-                    ),
+                    html.Img(id='event-analysis-wordcloud'),
                 ]
             ),
             html.Div(className='col-md-2'),
