@@ -11,14 +11,14 @@ def json_serial(obj):
 
     if isinstance(obj, (datetime, date)):
         return obj.isoformat()
-    raise TypeError("Type %s not serializable" % type(obj))
+    raise TypeError('Type %s not serializable' % type(obj))
 
 
 def iterate_through_calendars(source_directory: str, target_directory: str):
     events = []
     for file in os.listdir(os.fsencode(source_directory)):
         filename = os.fsdecode(file)
-        if filename.endswith(".ics"):
+        if filename.endswith('.ics'):
             events.extend(_parse_to_json(os.path.join(source_directory, filename)))
         else:
             continue
