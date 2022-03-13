@@ -39,9 +39,17 @@ def _setup_layout(app: dash.Dash):
         id='dark-theme-container',
         className='row',
         children=[
+            html.Div(className='col-md-12 center', children=[
+                html.H1(
+                    children=[
+                        'You Calendar Analyzer',
+                        html.I(className="fa-solid fa-calendar-days calendar-icon"),
+                    ]),
+                html.Hr(),
+            ]),
             html.Div(className='col-md-4'),
             html.Div(
-                className='col-md-4',
+                className='col-md-4 center',
                 children=[
                     html.Div(
                         children=[
@@ -59,17 +67,21 @@ def _setup_layout(app: dash.Dash):
                 ]
             ),
             html.Div(className='col-md-4'),
-            html.Div(style={'clear': 'both'}),
+            html.Div(
+                children=[
+                    html.Hr(),
+                ],
+                style={'clear': 'both'},
+            ),
             html.Div(className='col-md-2'),
             html.Div(
-                className='col-md-8',
+                className='col-md-8 total-events center',
                 children=[
                     html.H2('Total Events'),
+                    html.Hr(),
                     daq.LEDDisplay(
                         id='total-events',
                         value=len(df),
-                        color='#92e0d3',
-                        backgroundColor='#1e2130',
                         size=50,
                     ),
                 ]
@@ -78,41 +90,39 @@ def _setup_layout(app: dash.Dash):
             html.Div(style={'clear': 'both'}),
             html.Div(className='col-md-2'),
             html.Div(
-                className='col-md-4',
+                className='col-md-4 center shrink',
                 children=[
                     html.H2('Meetings'),
-                    daq.LEDDisplay(
+                    html.Hr(),
+                    daq.Gauge(
                         id='total-meetings',
-                        value=len(df),
-                        color='#92e0d3',
-                        backgroundColor='#1e2130',
-                        size=50,
+                        label="Default",
+                        value=0,
                     ),
+                    html.H2('Mins in Meetings'),
+                    html.Hr(),
                     daq.LEDDisplay(
-                        id='avg-meetings',
-                        value=len(df),
-                        color='#92e0d3',
-                        backgroundColor='#1e2130',
+                        id='sum-meetings',
+                        value=0,
                         size=50,
                     ),
                 ]
             ),
             html.Div(
-                className='col-md-4',
+                className='col-md-4 center shrink',
                 children=[
-                    html.H2('Persoanl Events'),
-                    daq.LEDDisplay(
+                    html.H2('Personal Events'),
+                    html.Hr(),
+                    daq.Gauge(
                         id='total-personal',
-                        value=len(df),
-                        color='#92e0d3',
-                        backgroundColor='#1e2130',
-                        size=50,
+                        label="Default",
+                        value=0,
                     ),
+                    html.H2('Mins in Personal Events'),
+                    html.Hr(),
                     daq.LEDDisplay(
-                        id='avg-personal',
-                        value=len(df),
-                        color='#92e0d3',
-                        backgroundColor='#1e2130',
+                        id='sum-personal',
+                        value=0,
                         size=50,
                     ),
                 ]
@@ -121,9 +131,10 @@ def _setup_layout(app: dash.Dash):
             html.Div(style={'clear': 'both'}),
             html.Div(className='col-md-2'),
             html.Div(
-                className='col-md-8',
+                className='col-md-8 center shrink',
                 children=[
-                    html.H2('Distribution'),
+                    html.H2('Daily Mins in Meetings Distribution'),
+                    html.Hr(),
                     dcc.Graph(
                         id="distribution",
                     ),
@@ -133,18 +144,37 @@ def _setup_layout(app: dash.Dash):
             html.Div(style={'clear': 'both'}),
             html.Div(className='col-md-2'),
             html.Div(
-                className='col-md-4',
+                className='col-md-4 center shrink',
                 children=[
-                    html.H2('Attendees'),
+                    html.H2('Top Participants'),
+                    html.Hr(),
                     dash_table.DataTable(
                         id='attendees-table',
+                        style_header={
+                            'backgroundColor': '#161a28',
+                            'color': 'white',
+                            'fontWeight': 'bold'
+                        },
+                        style_as_list_view=True,
+                        style_cell={
+                            'backgroundColor': '#161a28',
+                            'color': 'white'
+                        },
+                        style_data_conditional=[
+                            {
+                                "if": {"state": "selected"},
+                                "backgroundColor": "inherit !important",
+                                "border": "inherit !important",
+                            }
+                        ]
                     ),
                 ]
             ),
             html.Div(
-                className='col-md-4',
+                className='col-md-4 center shrink',
                 children=[
                     html.H2('Event Analysis'),
+                    html.Hr(),
                     html.Img(id='event-analysis-wordcloud'),
                 ]
             ),
@@ -158,5 +188,5 @@ def _setup_layout(app: dash.Dash):
         'border-radius': '5px',
         'padding': '50px',
         'margin-top': '20px',
-        'background-color': '#303030',
+        'background-color': '#1e2130',
     })

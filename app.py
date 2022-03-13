@@ -12,7 +12,11 @@ from dashboard import dashboard
 
 app = dash.Dash(
     __name__,
-    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    external_stylesheets=[
+        dbc.themes.BOOTSTRAP,
+        '/assets/css/styles.css',
+        '/assets/css/all.min.css'
+    ],
     meta_tags=[{'name': 'viewport', 'content': 'width=device-width, initial-scale=1'}]
 )
 
@@ -23,9 +27,11 @@ dashboard.setup(app)
     [
         Output(component_id="total-events", component_property="value"),
         Output(component_id="total-meetings", component_property="value"),
+        Output(component_id="total-meetings", component_property="max"),
         Output(component_id="total-personal", component_property="value"),
-        Output(component_id="avg-meetings", component_property="value"),
-        Output(component_id="avg-personal", component_property="value"),
+        Output(component_id="total-personal", component_property="max"),
+        Output(component_id="sum-meetings", component_property="value"),
+        Output(component_id="sum-personal", component_property="value"),
         Output(component_id="distribution", component_property="figure"),
         Output(component_id="attendees-table", component_property="data"),
         Output(component_id="event-analysis-wordcloud", component_property="src"),
@@ -35,7 +41,7 @@ dashboard.setup(app)
         State(component_id='date-picker-range', component_property='start_date'),
         State(component_id='date-picker-range', component_property='end_date'),
     ])
-def update_charts(n_clicks, start_date, end_date):
+def update_charts(_, start_date, end_date):
     df = pd.json_normalize(json.load(open(f'{settings.JSON_DIR}events.json', 'r')))
 
     df = df[(df['start'] >= start_date) & (df['start'] <= end_date)]
@@ -51,12 +57,24 @@ def update_charts(n_clicks, start_date, end_date):
 
     attendees_df = df.explode('attendees').groupby(['attendees'])['belongs_to'].count().reset_index(name="count").sort_values('count', ascending=False)
 
-    fig = px.bar(agg_df, x='start', y="duration", barmode="group")
+    fig = px.bar(
+        data_frame=agg_df,
+        x='start',
+        y="duration",
+        color_discrete_sequence=['#2596be']
+    )
+    fig.update_layout({
+        'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+        'font_color': '#fff',
+    })
 
     return [
         len(df),
         len(meetings_df),  # meetings are events with attendees
+        len(df),
         len(personal_df),  # personal events are the ones without attendees
+        len(df),
         round(meetings_df['duration'].sum()),
         round(personal_df['duration'].sum()) if len(personal_df) else 0.0,
         fig,
