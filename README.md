@@ -5,6 +5,8 @@ A calendar analyzer dashboard implemented as a user-friendly way to analyze your
 Currently, works with a *.ics* export and was tested with the one generated
 from [Google Calendar](https://takeout.google.com/).
 
+![Calendar Analyzer Dashboard](https://github.com/mihalispap/CalendarAnalyzer/blob/main/assets/docs/calendar-analyzer-dashboard.png?raw=true)
+
 ## Installation & Execution
 
 To successfully install and run the dashboard an environment variable file needs to be created containing the
