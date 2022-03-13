@@ -25,16 +25,16 @@ dashboard.setup(app)
 
 @app.callback(
     [
-        Output(component_id="total-events", component_property="value"),
-        Output(component_id="total-meetings", component_property="value"),
-        Output(component_id="total-meetings", component_property="max"),
-        Output(component_id="total-personal", component_property="value"),
-        Output(component_id="total-personal", component_property="max"),
-        Output(component_id="sum-meetings", component_property="value"),
-        Output(component_id="sum-personal", component_property="value"),
-        Output(component_id="distribution", component_property="figure"),
-        Output(component_id="attendees-table", component_property="data"),
-        Output(component_id="event-analysis-wordcloud", component_property="src"),
+        Output(component_id='total-events', component_property='value'),
+        Output(component_id='total-meetings', component_property='value'),
+        Output(component_id='total-meetings', component_property='max'),
+        Output(component_id='total-personal', component_property='value'),
+        Output(component_id='total-personal', component_property='max'),
+        Output(component_id='sum-meetings', component_property='value'),
+        Output(component_id='sum-personal', component_property='value'),
+        Output(component_id='distribution', component_property='figure'),
+        Output(component_id='attendees-table', component_property='data'),
+        Output(component_id='event-analysis-wordcloud', component_property='src'),
     ],
     [
         Input(component_id='btn-submit', component_property='n_clicks'),
@@ -55,12 +55,12 @@ def update_charts(_, start_date, end_date):
     agg_df = meetings_df.groupby(pd.to_datetime(df['start'], utc=True).dt.day_name()).sum()
     agg_df = agg_df.reindex(cats).reset_index()
 
-    attendees_df = df.explode('attendees').groupby(['attendees'])['belongs_to'].count().reset_index(name="count").sort_values('count', ascending=False)
+    attendees_df = df.explode('attendees').groupby(['attendees'])['belongs_to'].count().reset_index(name='count').sort_values('count', ascending=False)
 
     fig = px.bar(
         data_frame=agg_df,
         x='start',
-        y="duration",
+        y='duration',
         color_discrete_sequence=['#2596be']
     )
     fig.update_layout({
@@ -78,7 +78,7 @@ def update_charts(_, start_date, end_date):
         round(meetings_df['duration'].sum()),
         round(personal_df['duration'].sum()) if len(personal_df) else 0.0,
         fig,
-        [record for record in attendees_df[1:settings.TOPN + 1].to_dict("records")],
+        [record for record in attendees_df[1:settings.TOPN + 1].to_dict('records')],
         utils.analyzer.generate_wordcloud(df, 'summary')
     ]
 

@@ -43,7 +43,7 @@ def _setup_layout(app: dash.Dash):
                 html.H1(
                     children=[
                         'You Calendar Analyzer',
-                        html.I(className="fa-solid fa-calendar-days calendar-icon"),
+                        html.I(className='fa-solid fa-calendar-days calendar-icon'),
                     ]),
                 html.Hr(),
             ]),
@@ -96,7 +96,7 @@ def _setup_layout(app: dash.Dash):
                     html.Hr(),
                     daq.Gauge(
                         id='total-meetings',
-                        label="Default",
+                        label='Default',
                         value=0,
                     ),
                     html.H2('Mins in Meetings'),
@@ -115,7 +115,7 @@ def _setup_layout(app: dash.Dash):
                     html.Hr(),
                     daq.Gauge(
                         id='total-personal',
-                        label="Default",
+                        label='Default',
                         value=0,
                     ),
                     html.H2('Mins in Personal Events'),
@@ -136,7 +136,7 @@ def _setup_layout(app: dash.Dash):
                     html.H2('Daily Mins in Meetings Distribution'),
                     html.Hr(),
                     dcc.Graph(
-                        id="distribution",
+                        id='distribution',
                     ),
                 ]
             ),
@@ -162,9 +162,9 @@ def _setup_layout(app: dash.Dash):
                         },
                         style_data_conditional=[
                             {
-                                "if": {"state": "selected"},
-                                "backgroundColor": "inherit !important",
-                                "border": "inherit !important",
+                                'if': {'state': 'selected'},
+                                'backgroundColor': 'inherit !important',
+                                'border': 'inherit !important',
                             }
                         ]
                     ),
